@@ -4,7 +4,7 @@ import {
   backb,
   chapas,
   checks,
-  screenshot,
+  scs,
   cbe,
   cbebirr,
   telebirr,
@@ -244,11 +244,11 @@ function PaymentChoose() {
 
   return (
     <div className='bg-[#ecf7f8] min-h-screen flex justify-center'>
-      {notification && (
-        <div className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded shadow-md">
-          {notification}
-        </div>
-      )}
+     {notification && (
+  <div className="fixed top-0 left-0 right-0 bg-blue-500 text-white px-4 py-2 rounded-b-md shadow-md z-50">
+    {notification}
+  </div>
+)}
       <Link to='/'>
         <button className='absolute top-4 left-4 transition-transform duration-300 hover:scale-110'>
           <img src={backb} alt='Back' />
@@ -257,7 +257,7 @@ function PaymentChoose() {
       <div className='flex'>
         <div className='md:flex pt-[80px] md:pt-[60px]'>
           <div className='flex md:block space-x-2 md:block md:space-y-4 md:pr-4'>
-            {['arifs', 'chapas', 'screenshot'].map((button) => (
+            {['arifs', 'chapas', 'scs'].map((button) => (
               <button
                 key={button}
                 onClick={() => handleButtonClick(button)}
@@ -273,12 +273,12 @@ function PaymentChoose() {
                       ? chapas
                       : button === 'arifs'
                       ? arifs
-                      : screenshot
+                      : scs
                   }
                   alt={button}
                   className='w-[80px] h-[40px] md:w-[160px] md:h-[80px]'
                 />
-                {button === 'screenshot' && (
+                {button === 'scs' && (
                   <p className='text-sm text-green md:text-[22px] text-[13px] text-teal-600 font-semibold'>
                     (Contact Us)
                   </p>
@@ -401,7 +401,7 @@ function PaymentChoose() {
                                         <p className="text-center text-white font-inter md:text-[24px] text-[13px]">step 3</p>
                                     </div>
                                     <div className='ml-3'>
-                                        <p className='md:text-[24px] text-[13px]'>“Confirm Payment” የሚለውን ስትነኩት ክፍያ ወደሚደረግበት ስልክ ቁጥር PIN እንድታስገቡ የሚጠይቅ የማረጋገጫ ምልክት ይደርሳቹሃል።<br />ከዛም ቲሌብር ከመረጣቹ የ ቴሌብራችሁን ፣ ሲቢኢ ከመረጣቹ የ ሲቢኢ PIN በማስገባት ክፍያውን ታጠናቅቃላችሁ።</p>
+                                        <p className='md:text-[24px] text-[13px]'>“Confirm Payment” የሚለውን ስትነኩት ክፍያ ወደሚደረግበት ስልክ ቁጥር PIN እንድታስገቡ የሚጠይቅ የማረጋገጫ ምልክት ይደርሳቹሃል።<br />ከዛም ቲሌብር ከመረጣቹ የ ቴሌብራችሁን ፣ ሲቢኢ ከመረጣቹ የ ሲቢኢ ብር PIN በማስገባት ክፍያውን ታጠናቅቃላችሁ።</p>
                </div>
       </div>
 
@@ -409,7 +409,7 @@ function PaymentChoose() {
                         </div>
                     )}
 
-                    {selected === 'screenshot' && (
+                    {selected === 'scs' && (
                         <div className='space-y-4 pt-4 md:pt-0'>
                             <div className='bg-white md:w-[736px] w-[360px] md:h-[140px] h-[187px] rounded-md shadow-md flex items-center justify-center'>
                                 <img src={tgar} className='md:w-[71px] md:h-[63px]' />
