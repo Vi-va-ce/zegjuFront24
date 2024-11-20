@@ -39,7 +39,7 @@ function Header() {
                 </p>
               </button>
             </Link>
-            <Link to='/SignUp2'>
+            <Link to='/SignUp'>
               <button className="w-[74px] md:w-[104px] h-[27px] md:h-[40px] bg-black rounded-md hover:bg-zinc-500">
                 <p className="text-[16px] text-white">Sign up</p>
               </button>

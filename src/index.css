@@ -665,4 +665,72 @@ background: linear-gradient(101deg, #3AFFF3 10.26%, rgba(255, 58, 247, 0.76) 132
         max-height: 300px; /* Adjust as needed */
         overflow-y: auto;  /* Enable vertical scrolling */
     }
+    .popup {
+      position: absolute;
+      width: 430px;
+      height: 140px;
+      right: 10px; /* Align to the right */
+      top: 30%;
+      transform: translateY(-50%);
+      background: #553E87;
+      border-radius: 24px;
+      color: #FFFFFF;
+      font-family: 'Mulish', sans-serif;
+      font-size: 18px;
+      line-height: 1.2;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      animation: slide-in-right 0.5s forwards;
+      z-index: 1000;
+  }
+  
+  @keyframes slide-in-right {
+      from {
+          transform: translateX(100%); /* Start off-screen to the right */
+      }
+      to {
+          transform: translateX(0); /* Move to the final position */
+      }
+  }
+  
+  @keyframes slide-out-right {
+      from {
+          transform: translateX(0); /* Start at final position */
+      }
+      to {
+          transform: translateX(100%); /* Slide back to the right */
+      }
+  }
+  
+  /* Styles for smaller screens */
+  @media (max-width: 768px) {
+      .popup {
+          width: 90%; /* Take up most of the screen width */
+          right: 5%; /* Center it */
+          height: 110px; /* Adjust height */
+          font-size: 14px; /* Adjust font size */
+          top: 15%; /* Slightly lower on smaller screens */
+      }
+  
+      .confirm-button {
+          padding: 8px 16px; /* Adjust button padding */
+          font-size: 14px; /* Adjust font size */
+      }
+  }
+  
+  .confirm-button {
+      background-color: #553E87;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  }
+  
+  .confirm-button:hover {
+      background-color: #472f6f;
+  }
+  
+  
     }

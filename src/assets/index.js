@@ -165,14 +165,23 @@ import analytical from './Analytical.svg'
 import arifs from './Ariffs.svg'
 import chapas from './Chapas.svg'
 import checks from './checks.svg'
-
+import screenshot from './screenshot.svg'
+import telebirr from './telebirr.svg'
+import cbe from './cbe.svg'
+import phones from './phones.svg'
+import tgar from './tgar.svg'
 import refresh from './refresh.svg'
+import cbebirr from './cbebirr.png'
 export {
 
-  
+  cbebirr,
+  tgar,
   refresh,
-  
+  phones,
+  telebirr,
+  cbe,
   checks,
+  screenshot,
   chapas,
   arifs,
   analytical,
