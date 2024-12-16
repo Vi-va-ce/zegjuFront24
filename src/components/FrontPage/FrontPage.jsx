@@ -7,6 +7,7 @@ import Exams from './Exams';
 import NormalFooter from './NormalFooter';
 import Foooter from './Foooter';
 import Loader from '../../Loader';
+import Peertopeer from './Peertopeer';
 
 function FrontPage() {
   const [scrollMessageReceived, setScrollMessageReceived] = useState(false);
@@ -51,6 +52,10 @@ function FrontPage() {
         <Exams/>
       </div>
 
+      <div>
+        <Peertopeer/>
+      </div>
+
       <div className='pt-8 md:pt-[100px]'>
         <NormalFooter />
       </div>
@@ -58,6 +63,7 @@ function FrontPage() {
       <div className='pt-[31px] md:pt-[70px] pb-'>
         <Foooter />
       </div>
+     
     </div>
   );
 }

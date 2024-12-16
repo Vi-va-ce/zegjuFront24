@@ -2,7 +2,7 @@ import React from 'react'
 import { di } from '../../../../assets'
 import { Link, useNavigate } from 'react-router-dom';
 
-function Pro({ onClickButton, ProButtonStatus }) {
+function Pro({ onClickButton, ProButtonStatus, PropriceStatus }) {
   const handleClick = () => {
     onClickButton('scroll');
   };
@@ -29,7 +29,7 @@ function Pro({ onClickButton, ProButtonStatus }) {
       </ul>
       <div className='flex pl-4 md:pl-8 mt-1 md:mt-6'>
         <p className='text-[#966ded] text-[16px] md:text-[24px] font-bold'>
-        289.00 ETB</p> <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-2'> / 4 Months </p>
+        {PropriceStatus + " ETB" ||  "289.00 ETB"} </p> <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-2'> / 1 semester </p>
       </div>
 
       <div className='flex justify-center items-center pt-1 md:pt-6'>

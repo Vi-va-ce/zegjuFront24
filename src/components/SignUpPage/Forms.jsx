@@ -97,6 +97,7 @@ function Forms() {
   const [registrationStatus, setRegistrationStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailExistsError, setEmailExistsError] = useState('');
+  const [promoError, setPromoError] = useState('');
   const [nameExistsError, setNameExistsError] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
@@ -128,6 +129,10 @@ function Forms() {
           phoneNumber: ''
         }));
       }
+    }
+
+    if (id === 'promoCode') {
+      setPromoError(''); // Clear promo code error when user starts typing
     }
 
     setFormData((prevFormData) => ({
@@ -172,7 +177,7 @@ function Forms() {
 
     const { username, phoneNumber, university, password, confirmPassword, promoCode } = formData;
     const allFieldsFilled = [username, phoneNumber, university, password, confirmPassword].every(field => field.trim() !== '');
-    
+
     if (!allFieldsFilled) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -189,19 +194,6 @@ function Forms() {
       return;
     }
 
-    // Check promo code
-    if (promoCode && promoCode !== 'HU2017') {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        promoCode: 'Wrong promo code.'
-      }));
-      return;
-    }
-
-    if (promoCode === 'HU2017') {
-      localStorage.setItem('promoCode', promoCode);
-    }
-
     const { confirmPassword: _, ...backendData } = formData;
     backendData.email = phoneNumber;
 
@@ -209,12 +201,13 @@ function Forms() {
       setIsLoading(true);
 
       const response = await axios.post('v1/student/registerUser', backendData);
-      console.log(response.data);
 
       if (response.data === 'Sorry a user with this phonenumber already exists') {
         setEmailExistsError('Sorry, a user with this PhoneNumber already exists');
       } else if (response.data === 'Sorry a user with this username already exists') {
         setNameExistsError('Sorry, a user with this username already exists');
+      } else if (response.data === 'Sorry the promocode is not correct') {
+        setPromoError('Sorry, the promocode is not correct');
       } else if (response.data === 'registered') {
         localStorage.setItem('username', username);
         setRegistrationStatus(true);
@@ -244,6 +237,7 @@ function Forms() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {/* Username Input */}
         <div className="relative mt-4">
           <input
             type="text"
@@ -270,6 +264,7 @@ function Forms() {
           )}
         </div>
 
+        {/* Phone Number Input */}
         <div className="relative mt-4">
           <input
             type="tel"
@@ -299,6 +294,7 @@ function Forms() {
           )}
         </div>
 
+        {/* University Select */}
         <div className="relative mt-4">
           <select
             id="university"
@@ -327,6 +323,7 @@ function Forms() {
           </label>
         </div>
 
+        {/* Password Input */}
         <div className="relative mt-4">
           <input
             type="password"
@@ -350,6 +347,7 @@ function Forms() {
           </label>
         </div>
 
+        {/* Confirm Password Input */}
         <div className="relative mt-4">
           <input
             type="password"
@@ -376,6 +374,7 @@ function Forms() {
           )}
         </div>
 
+        {/* Promo Code Input */}
         <div className="relative mt-4">
           <input
             type="text"
@@ -394,14 +393,15 @@ function Forms() {
             }`}
           >
             <div className='flex'>
-              <img src={check} className='pr-2' alt="Promo Icon" />
+              <img src={check} className='pr-2' alt="Promo Icon" /> Promo Code
             </div>
           </label>
-          {errors.promoCode && (
-            <p className="text-red-500 text-sm mt-1">{errors.promoCode}</p>
+          {promoError && (
+            <p className="text-red-500 text-sm mt-1">{promoError}</p>
           )}
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isButtonDisabled}

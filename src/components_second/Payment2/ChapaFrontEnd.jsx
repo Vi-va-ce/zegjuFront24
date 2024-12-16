@@ -1,10 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext,useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { arif, backb, chapas } from '../../assets';
+import Loader from '../../Loader';
+
+
+
+
 
 function ChapaFrontEnd() {
+  
+  const [data, setData] = useState([]);
+  const [loadings, setLoadings] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('v4/student/getHomePageData');
+      setData(response);
+     
+    } catch (error) {
+      
+    } finally {
+      setLoadings(false);
+    }
+    
+  };
   const [formData, setFormData] = useState({
     amount: '',
     email: '',
@@ -18,34 +43,31 @@ function ChapaFrontEnd() {
   const [itemName, setItemName] = useState('');
 
   useEffect(() => {
+    if (!data || !data.data) return;
     const buttonStatus = localStorage.getItem('buttonStatus');
-    const promoCode = localStorage.getItem('promoCode');
-    let price = 149.99;
+    let price =data.data.freshCourseData.basicPrice;
+
     let name = 'FRESHMAN BASIC';
 
     switch (buttonStatus) {
       case 'UAT':
-        price = 289.99;
+        price =  data.data.uatData.price;
         name = 'AAU UAT';
         break;
       case 'Pro':
-        price = 289.00;
+        price =data.data.freshCourseData.proPrice;
         name = 'FRESHMAN PRO';
         break;
       case 'Prem':
-        price = 359.00;
+        price = data.data.freshCourseData.premiumPrice;
         name = 'FRESHMAN PREMIUM';
         break;
       case 'GAT':
-        price = 449.99;
+        price =  data.data.gatData.price;
         name = 'GAT';
-        // Check for promo code and adjust price
-        if (promoCode === 'ZEGJUGAT') {
-          price = 350;
-        }
         break;
       case 'EAA':
-        price = 500;
+        price =  data.data.eaaData.price;
         name = 'EAA';
         break;
       case 'SAT':
@@ -62,20 +84,14 @@ function ChapaFrontEnd() {
         name = 'TOEFL';
         break;
       default:
-        price = 219.00;
+        price =  data.data.freshCourseData.basicPrice;
         name = 'FRESHMAN BASIC';
         break;
     }
 
-    // Check for promo code and apply 10% discount
-    if (promoCode === 'HU2017') {
-      price *= 0.9; // Apply 10% discount
-    }
-
     setFormData((prevData) => ({ ...prevData, amount: price.toFixed(2) }));
     setItemName(name);
-  }, []);
-
+  },  [data]);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -126,7 +142,11 @@ function ChapaFrontEnd() {
       setIsLoading(false);
     }
   };
-
+  if (loadings  || !data) {
+    return <div className="flex items-center justify-center min-h-screen">
+    <Loader />
+  </div> // Display loading message
+  }
   return (
     <div className='bg-gray-100'>
       <div className='flex'>

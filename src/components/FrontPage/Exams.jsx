@@ -24,6 +24,9 @@ function Exams() {
  
   const [loading, setLoading] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
+  const [BasicpriceStatus, setBasicpriceStatus] = useState('');
+  const [PremiumpriceStatus, setPremiumpriceStatus] = useState('');
+  const [Propricetatus, setPropriceStatus] = useState('');
 
   useEffect(() => {
     const hasRefreshToken = document.cookie.includes('refresh_token');
@@ -38,7 +41,7 @@ function Exams() {
               'Content-Type': 'application/json',
             },
           });
-
+        
           const { data } = response;
          
 
@@ -50,7 +53,9 @@ function Exams() {
             setGatButtonStatus(data.gatData.buttonStatus);
             setUatButtonStatus(data.uatData.buttonStatus);
             setSatButtonStatus(data.satData.buttonStatus);
-
+            setBasicpriceStatus(data.freshCourseData.basicPrice)
+            setPremiumpriceStatus(data.freshCourseData.premiumPrice)
+            setPropriceStatus(data.freshCourseData.proPrice)
             
             
 
@@ -129,12 +134,12 @@ function Exams() {
           </div>
           <div className='pt-4 md:pt-12 pb-4 md:flex justify-center items-center'>
             <div className='flex justify-center items-center space-x-4 md:space-x-8'>
-              <div className=''><Basic BasicButtonStatus={BasicButtonStatus} onClickButton={BasicButtonStatus === 'Continue Preparing' ? handleScrollMessage : () => handleEnroll(BasicButtonStatus, 'Basic')} /></div>
-              <div className=''><Pro ProButtonStatus={ProButtonStatus} onClickButton={ProButtonStatus === 'Continue Preparing' ? handleScrollMessage3 : () => handleEnroll(ProButtonStatus, 'Pro')} /></div>
-              <div className='hidden md:block'><Prem PremiumButtonStatus={PremiumButtonStatus} onClickButton={PremiumButtonStatus === 'Continue Preparing' ? handleScrollMessage2 : () => handleEnroll(PremiumButtonStatus, 'Prem')} /></div>
+              <div className=''><Basic BasicButtonStatus={BasicButtonStatus}  BasicpriceStatus={BasicpriceStatus} onClickButton={BasicButtonStatus === 'Continue Preparing' ? handleScrollMessage : () => handleEnroll(BasicButtonStatus, 'Basic')} /></div>
+              <div className=''><Pro ProButtonStatus={ProButtonStatus} PropriceStatus={Propricetatus} onClickButton={ProButtonStatus === 'Continue Preparing' ? handleScrollMessage3 : () => handleEnroll(ProButtonStatus, 'Pro')} /></div>
+              <div className='hidden md:block'><Prem PremiumButtonStatus={PremiumButtonStatus} PremiumpriceStatus={PremiumpriceStatus} onClickButton={PremiumButtonStatus === 'Continue Preparing' ? handleScrollMessage2 : () => handleEnroll(PremiumButtonStatus, 'Prem')} /></div>
             </div>
             <div className='flex justify-center items-center pt-4 space-x-4'>
-              <div className='md:hidden'><Prem PremiumButtonStatus={PremiumButtonStatus} onClickButton={PremiumButtonStatus === 'Continue Preparing' ? handleScrollMessage2 : () => handleEnroll(PremiumButtonStatus, 'Prem')} /></div>
+              <div className='md:hidden'><Prem PremiumButtonStatus={PremiumButtonStatus} PremiumpriceStatus={PremiumpriceStatus} onClickButton={PremiumButtonStatus === 'Continue Preparing' ? handleScrollMessage2 : () => handleEnroll(PremiumButtonStatus, 'Prem')} /></div>
               <div className='pr-[150px] md:hidden'><img src={rect}></img></div>
             </div>
           </div>

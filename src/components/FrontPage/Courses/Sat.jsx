@@ -28,7 +28,7 @@ function Sat({onClickButton , SatButtonStatus}) {
         <div className='pt-1'>
         <div className='flex pl-4 md:pl-6 mt-1 md:mt-4'>
         <p className='text-[#966ded] text-[13px] md:text-[20px] font-bold'>
-        749.99 ETB</p> <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-1'> /  4 Months </p>
+        749.99 ETB</p> <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-1'> /  1 semester </p>
         
     </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext,useState, useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Auth from "./components/Auth";
 import Footer2 from "./components/Footer/Footer2";
@@ -96,6 +96,12 @@ import LogoutNotification from "./components/LogoutNotification"; // Add this im
 import NotesPrem from "./components_second/NotesPrem/NotesPrem";
 
 import HuPromo from "./components_second/Promo/HuPromo";
+import PromotersList from "./PromoCode/PromotersList";
+import PromoLogin from "./PromoCode/PromoLogin";
+import StudentList from "./PromoCode/StudentList";
+
+
+import FileUploadForm from "./components_second/Payment/FileUploadForm";
 
 const App = () => {
   const navigate = useNavigate();
@@ -180,14 +186,23 @@ const App = () => {
   return (
     <div className="unscroll">
       <LogoutNotification /> {/* Add this component */}
+     
       <Routes>
+
         <Route path="/" element={<FrontPage />} />
-        <Route path="/HuPromo" element={<HuPromo/>} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/SignUp2" element={<SignUp2 />} />
         <Route path="/Payment" element={<Auth><PaymentChoose /></Auth>} />
         <Route path="/Arif" element={<Auth><Payamentmain /></Auth>} />
         <Route path="/Chapa" element={<Auth><ChapaFrontEnd /></Auth>} />
+      
+      
+        <Route path="/Prlogin" element ={<PromoLogin/>}/>
+        <Route path="/HuPromo" element={<HuPromo/>} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/SignUp2" element={<SignUp2 />} />
+        
+       
+        <Route path="/PL" element={<Auth><PromotersList/></Auth>}/>
+        <Route path="/studentlist" element={<Auth><StudentList/></Auth>}/>
         <Route path="/Error" element={<Auth><Errors /></Auth>} />
         <Route path="/Cancel" element={<Auth><Cancel /></Auth>} />
         <Route path="/Success" element={<Auth><Successs /></Auth>} />
@@ -258,6 +273,8 @@ const App = () => {
         <Route path="/PracticePro" element={<Auth><PracticePro subjectName={selectedSubjects} message="full" /></Auth>} />
         <Route path="/ResultBoard" element={<ResultPage />} />
       </Routes>
+
+  
 
       {!isHomepage && <Black />}
     </div>

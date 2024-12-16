@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext,useState, useEffect } from 'react';
+import FileUploadForm from './FileUploadForm';
 import {
   arifs,
   backb,
@@ -8,15 +9,49 @@ import {
   cbe,
   cbebirr,
   telebirr,
-  tgar
+  tgar,
+  dashn,
+  cbee,
+  tele,
+  awash,
+  abis,
+  uploadd,
+  arrow,
 } from '../../assets';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loader from '../../Loader';
+
 
 function PaymentChoose() {
+
+  const [data, setData] = useState([]);
+  const [loadings, setLoadings] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('v4/student/getHomePageData');
+      setData(response);
+      
+     
+    } catch (error) {
+      
+    } finally {
+      setLoadings(false);
+    }
+    
+  };
+
+
   const [selected, setSelected] = useState('arifs');
   const [paymentMethod, setPaymentMethod] = useState('telebirr');
-  const [price, setPrice] = useState(149.99);
+  
+  const [paymentMethods, setPaymentMethods] = useState('');
+  const [price, setPrice] = useState();
   const [buttonName, setButtonName] = useState('FRESHMAN BASIC');
   const [expireDate, setExpireDate] = useState(new Date(Date.now() + 5 * 60 * 1000).toISOString());
   const [notification, setNotification] = useState('');
@@ -26,8 +61,37 @@ function PaymentChoose() {
   const [showPopup, setShowPopup] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New state for loading
-  const navigate = useNavigate();
+  const [selectedPayment, setSelectedPayment] = useState('cbee');
 
+  const navigate = useNavigate();
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+
+  // Callback to be passed to the PaymentForm to handle the result
+  const handleUploadSuccess = (message) => {
+    setUploadSuccess(true);
+    setUploadMessage(message);
+  }
+  const paymentDetails = {
+    cbee: { name: 'Brook Fantahun Gebremeskel', number: '1000218150628', img: cbee },
+    tele: { name: 'Brook Fantahun', number: '0953134956', img: tele },
+    dashn: { name: 'Esrom Sharew Tadesse', number:'5208703554011', img: dashn },
+    abis: { name: 'Esrom Sharew Tadesse', number: '7000056526035', img: abis },
+    awash: { name: 'Esrom Sharew Tadess', number: ' 01320944351300', img: awash },
+  };
+
+  // Get the details of the selected payment method
+  const { name, number, img } = paymentDetails[selectedPayment];
+
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Handle the file (e.g., store in state, upload, etc.)
+      console.log(file);
+    }
+  };
   const [paymentData, setPaymentData] = useState({
     paymentMethods: ['TELEBIRR'],
     phone: '',
@@ -59,63 +123,62 @@ function PaymentChoose() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const buttonStatus = localStorage.getItem('buttonStatus') || 'FRESHMAN BASIC';
-    const promoCode = localStorage.getItem('promoCode');
-    let calculatedPrice = 149.99;
+useEffect(() => {
+  if (!data || !data.data) return;
 
-    switch (buttonStatus) {
-      case 'UAT':
-        calculatedPrice = 289.99;
-        setButtonName('AAU UAT');
-        break;
-      case 'Pro':
-        calculatedPrice = 289.00;
-        setButtonName('FRESHMAN PRO');
-        break;
-      case 'Prem':
-        calculatedPrice = 350.00;
-        setButtonName('FRESHMAN PREMIUM');
-        break;
-      case 'GAT':
-        calculatedPrice = promoCode === 'ZEGJUGAT' ? 350 : 449.99;
-        setButtonName('GAT');
-        break;
-      case 'EAA':
-        calculatedPrice = 500;
-        setButtonName('EAA');
-        break;
-      case 'SAT':
-        calculatedPrice = 750;
-        setButtonName('SAT');
-        break;
-      case 'IELTS':
-        setButtonName('IELTS');
-        break;
-      case 'MAT':
-        setButtonName('MATRIC');
-        break;
-      case 'TOEFL':
-        setButtonName('TOEFL');
-        break;
-      default:
-        calculatedPrice = 219.00;
-        setButtonName('FRESHMAN BASIC');
-        break;
-    }
+  const buttonStatus = localStorage.getItem('buttonStatus') || 'FRESHMAN BASIC';
+  let calculatedPrice = data.data.freshCourseData.basicPrice;
 
-    if (promoCode === 'HU2017') {
-      calculatedPrice *= 0.9; // Apply 10% discount
-    }
+  switch (buttonStatus) {
+    case 'UAT':
+      calculatedPrice = data.data.uatData.price;
+      setButtonName('AAU UAT');
+      break;
+    case 'Pro':
+      calculatedPrice = data.data.freshCourseData.proPrice;
+      setButtonName('FRESHMAN PRO');
+      break;
+    case 'Prem':
+      calculatedPrice = data.data.freshCourseData.premiumPrice;
+      setButtonName('FRESHMAN PREMIUM');
+      break;
+    case 'GAT':
+      calculatedPrice = data.data.gatData.price;
+      setButtonName('GAT');
+      break;
+    case 'EAA':
+      calculatedPrice = data.data.eaaData.price;
+      setButtonName('EAA');
+      break;
+    case 'SAT':
+      calculatedPrice = data.data.satData.price;
+      setButtonName('SAT');
+      break;
+    case 'IELTS':
+      setButtonName('IELTS');
+      break;
+    case 'MAT':
+      setButtonName('MATRIC');
+      break;
+    case 'TOEFL':
+      setButtonName('TOEFL');
+      break;
+    default:
+      calculatedPrice = data.data.freshCourseData.basicPrice;
+      setButtonName('FRESHMAN BASIC');
+      break;
+  }
 
-    setPrice(calculatedPrice.toFixed(2));
-    setPaymentData(prevData => ({
-      ...prevData,
-      items: [{ ...prevData.items[0], name: buttonName, price: calculatedPrice }],
-      beneficiaries: [{ ...prevData.beneficiaries[0], amount: calculatedPrice }],
-      nonce: generateNonce(),
-    }));
-  }, [buttonName]);
+  // Set price and payment data
+  setPrice(calculatedPrice.toFixed(2));
+  setPaymentData(prevData => ({
+    ...prevData,
+    items: [{ ...prevData.items[0], name: buttonName, price: calculatedPrice }],
+    beneficiaries: [{ ...prevData.beneficiaries[0], amount: calculatedPrice }],
+    nonce: generateNonce(),
+  }));
+}, [data, buttonName]);
+
 
   const handleButtonClick = (button) => {
     setSelected(button);
@@ -131,6 +194,11 @@ function PaymentChoose() {
       paymentMethods: [method.toUpperCase()],
     }));
   };
+
+  
+    const handlePaymentMethodClicks = (method) => {
+      setPaymentMethods(method);
+    };
 
   const validatePhoneNumber = (phone) => {
     const phoneRegex = /^9\d{8}$/;
@@ -241,7 +309,11 @@ function PaymentChoose() {
 
     return () => eventSource.close();
   }, [navigate]);
-
+  if (loadings  || !data) {
+    return <div className="flex items-center justify-center min-h-screen">
+    <Loader />
+  </div> // Display loading message
+  }
   return (
     <div className='bg-[#ecf7f8] min-h-screen flex justify-center'>
      {notification && (
@@ -249,7 +321,7 @@ function PaymentChoose() {
     {notification}
   </div>
 )}
-      <Link to='/'>
+    <Link to='/'>
         <button className='absolute top-4 left-4 transition-transform duration-300 hover:scale-110'>
           <img src={backb} alt='Back' />
         </button>
@@ -410,32 +482,79 @@ function PaymentChoose() {
                     )}
 
                     {selected === 'scs' && (
-                        <div className='space-y-4 pt-4 md:pt-0'>
-                            <div className='bg-white md:w-[736px] w-[360px] md:h-[140px] h-[187px] rounded-md shadow-md flex items-center justify-center'>
-                                <img src={tgar} className='md:w-[71px] md:h-[63px]' />
-                                <p className='font-medium italic text-[14px] md:text-[27.49px] md:leading-[33.26px]  text-center'>
-                                    Contact Us on the Telegram account below if all the payment methods do not work.
-                                </p>
-                            </div>
-                            <div className='flex justify-center'>
-                                <button className='bg-blue-500 text-white rounded-md px-4 py-2'>
-                                    Contact Support
-                                </button>
-                            </div>
-                                        
-                            <div className='space-y-2 pt-[10px] pb-12 w-[354px] md:w-[800px]'>
+                          
+                            <div className="space-y-4 pt-6 md:pt-0">
+                              <div className="flex justify-center md:space-x-6 space-x-1">
+                                {Object.keys(paymentDetails).map((method) => (
+                                  <button
+                                    key={method}
+                                    onClick={() => setSelectedPayment(method)}
+                                    className={`relative transition-all duration-300 flex items-center justify-center ${
+                                      selectedPayment === method
+                                        ? 'border-[0.98px] border-[#0fa958] bg-[rgba(15,169,88,0.05)]'
+                                        : 'bg-white border-[0.98px] shadow-md'
+                                    } hover:bg-[rgba(15,169,88,0.15)] rounded-md p-2`}
+                                  >
+                                    <img
+                                      src={paymentDetails[method].img}
+                                      className="md:w-[87px] w-[47px] md:h-[77px] h-[34px]"
+                                      alt={`${method} logo`}
+                                    />
+                                  </button>
+                                ))}
+                              </div>
+                        
+                              {/* Display Selected Payment Information */}
+                              <div className="bg-white md:w-[736px] w-[360px] md:h-[79px] h-[38px]  rounded-md shadow-md flex items-center justify-center">
+                                <img src={img} className="md:w-[39px] md:h-[51px] w-[30px] h-[40px] pr-2" alt="Selected Payment Logo" />
+                                <p className="pr-2 text-gray-800 font-semibold md:text-[18px] text-[12px] ">{name}</p>
+                                <span className="md:text-lg text-[12px] font-bold text-gray-700">→</span>
+                                <p className="pl-4 text-gray-800 md:text-[18px] text-[12px] font-semibold">{number}</p>
+                              </div>
+                          
+
+
+                         <div className='bg-white md:w-[736px] w-[361px] md:h-[214px] h-[187px] rounded-md shadow-md'>
+                           <div className='flex items-center justify-center'>
+                             <div className='md:w-[680px] flex flex-col items-center md:mt-[40px] mt-[50px]'>
+                              
+                               <div className='flex flex-col space-y-4'>
+                              
+                                  <div className='flex items-center'>
+                                    <FileUploadForm/>
+                                  
+        
+      
+    
+                                    
+                                  </div>
+                                </div>
+                             
+                             </div>
+                           </div>
+                           <div className='bg-black md:w-[736px] md:h-[45px] md:mt-[30px] mt-[20px] rounded-b-lg'>
+                             <div className='flex items-center justify-between pl-16 pr-16 pt-1'>
+                               <p className='text-white md:text-[24px] text-[13px]'>{buttonName}</p>
+                               <p className='text-white md:text-[24px] text-[13px]'>{price} ETB</p>
+                             </div>
+                           </div>
+                         </div>
+                         <div className='space-y-2 md:pt-[20px] pt-16 pb-12 w-[354px] md:w-[800px]'>
                                 <div className='flex'>
                                     <div className="md:w-[96px] w-[55px] md:h-[40px] h-[23px] bg-[rgba(150,109,237,1)] md:rounded-lg rounded-md flex items-center justify-center">
-                                    <p className="text-center text-white font-inter md:text-[24px] text-[13px]">step 1</p>
+                                        <p className="text-center text-white font-inter md:text-[24px] text-[13px]">step 1</p>
                                     </div>
-                                    <div className='ml-3'> <p className='md:text-[24px] text-[13px]'>
-                                    ሁሉም የክፍያ አማራጮች ካስቸገሯችሁ ቴለግራም ላይ @zegjusupport ላይ አነጋግሩን። </p> </div>
+                                    <div className='ml-3'>
+                                        <p className='md:text-[24px] text-[13px]'>ሁሉም የክፍያ አማራጮች ካስቸገሯችሁ ቴለግራም ላይ @zegjusupport ላይ አነጋግሩን።</p>
+                                    </div>
                                 </div>
-                                           
-                                    
-                               
+                                </div>
+                        
+                        
+                         
                         </div>
-                        </div>
+
+                        
                     )}
                 </div>
             </div>

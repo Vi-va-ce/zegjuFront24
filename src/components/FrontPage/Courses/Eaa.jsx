@@ -30,7 +30,7 @@ function Eaa({onClickButton , EaaButtonStatus}) {
                         <p className='text-[#966ded] text-[13px] md:text-[20px] font-bold'>
                             549.99 ETB
                         </p>
-                        <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-1'> / 4 Months </p>
+                        <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-1'> / 1 semester </p>
                     </div>
                 </div>
             )}

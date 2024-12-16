@@ -77,46 +77,46 @@ const privateUniversities = [
   "Alpha University College"
 ];
 
-function Forms() {
+function Forms2() {
   const [formData, setFormData] = useState({
     username: '',
     phoneNumber: '',
     university: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    promoCode: ''
   });
 
   const [errors, setErrors] = useState({
     passwordMatch: true,
     phoneNumber: '',
-    formCompletion: ''
+    formCompletion: '',
+    promoCode: ''
   });
 
   const [registrationStatus, setRegistrationStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailExistsError, setEmailExistsError] = useState('');
+  const [promoError, setPromoError] = useState('');
   const [nameExistsError, setNameExistsError] = useState('');
-  
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if any field is empty
-    const allFieldsFilled = Object.values(formData).every(field => field.trim() !== '');
+    const { username, phoneNumber, university, password, confirmPassword } = formData;
+    const allFieldsFilled = [username, phoneNumber, university, password, confirmPassword].every(field => field.trim() !== '');
     setIsButtonDisabled(!allFieldsFilled);
   }, [formData]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
 
-    // Clear nameExistsError when username field is edited
     if (id === 'username') {
       setNameExistsError('');
     }
 
     if (id === 'phoneNumber') {
-      // Check if the phone number starts with "0" and has exactly 10 digits
       const phoneRegex = /^0\d{9}$/;
       if (!phoneRegex.test(value)) {
         setErrors((prevErrors) => ({
@@ -130,6 +130,11 @@ function Forms() {
         }));
       }
     }
+
+    if (id === 'promoCode') {
+      setPromoError(''); // Clear promo code error when user starts typing
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [id]: value
@@ -143,15 +148,7 @@ function Forms() {
   const handleBlur = (e) => {
     const { id, value } = e.target;
 
-    if (id === 'username' && !value) {
-      e.target.previousElementSibling.style.display = 'flex';
-    } else if (id === 'phoneNumber' && !value) {
-      e.target.previousElementSibling.style.display = 'flex';
-    } else if (id === 'university' && !value) {
-      e.target.previousElementSibling.style.display = 'flex';
-    } else if (id === 'password' && !value) {
-      e.target.previousElementSibling.style.display = 'flex';
-    } else if (id === 'confirmPassword' && !value) {
+    if (!value) {
       e.target.previousElementSibling.style.display = 'flex';
     }
   };
@@ -167,7 +164,6 @@ function Forms() {
         Cookies.set('refresh_token', response.data.refresh_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         navigate('/');
-    
       } else {
         console.error('Login failed:', response.data);
       }
@@ -179,8 +175,9 @@ function Forms() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if all fields are filled
-    const allFieldsFilled = Object.values(formData).every(field => field.trim() !== '');
+    const { username, phoneNumber, university, password, confirmPassword, promoCode } = formData;
+    const allFieldsFilled = [username, phoneNumber, university, password, confirmPassword].every(field => field.trim() !== '');
+
     if (!allFieldsFilled) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -189,7 +186,7 @@ function Forms() {
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         passwordMatch: false
@@ -197,38 +194,35 @@ function Forms() {
       return;
     }
 
-    // Prepare formData for the backend without confirmPassword and use phoneNumber as the email
-    const { phoneNumber, confirmPassword, ...backendData } = formData;
+    const { confirmPassword: _, ...backendData } = formData;
     backendData.email = phoneNumber;
 
     try {
-      setIsLoading(true); // Set loading state to true before making the API request
+      setIsLoading(true);
 
       const response = await axios.post('v1/student/registerUser', backendData);
-      console.log(response.data);
 
-      // Check if the response data contains an error message
-      if (response.data === 'Sorry a user with this email already exists') {
+      if (response.data === 'Sorry a user with this phonenumber already exists') {
         setEmailExistsError('Sorry, a user with this PhoneNumber already exists');
       } else if (response.data === 'Sorry a user with this username already exists') {
-        setNameExistsError('Sorry,a user with this username already exists');
+        setNameExistsError('Sorry, a user with this username already exists');
+      } else if (response.data === 'Sorry the promocode is not correct') {
+        setPromoError('Sorry, the promocode is not correct');
       } else if (response.data === 'registered') {
-        console.log(response.data)
-        localStorage.setItem('username', formData.username); // Store the username
+        localStorage.setItem('username', username);
         setRegistrationStatus(true);
 
-        // Automatically log in after successful registration
-        handleLogin(phoneNumber, formData.password);
+        handleLogin(phoneNumber, password);
       }
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      setIsLoading(false); // Set loading state back to false after the API request is complete
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className='w-[361px] md:w-[464px] h-[490px] md:h-[542px] bg-white shadow-[4px_-5px_9.34px_0px_rgba(146,146,146,0.16)] rounded-3xl pl-[40px] pt-[30px]'>
+    <div className='w-[361px] md:w-[464px] h-[590px] md:h-[642px] bg-white shadow-[4px_-5px_9.34px_0px_rgba(146,146,146,0.16)] rounded-3xl pl-[40px] pt-[30px]'>
       <div className='flex justify-between items-center'>
         <p className='font-inter text-[24px] md:text-[38px] font-bold'>Sign up</p>
         <div className='pr-[40px]'>
@@ -243,6 +237,7 @@ function Forms() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {/* Username Input */}
         <div className="relative mt-4">
           <input
             type="text"
@@ -269,6 +264,7 @@ function Forms() {
           )}
         </div>
 
+        {/* Phone Number Input */}
         <div className="relative mt-4">
           <input
             type="tel"
@@ -294,10 +290,11 @@ function Forms() {
             <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
           )}
           {emailExistsError && (
-            <p className="text-red-500 text-sm">{emailExistsError}</p>
+            <p className="text-red-500 text-sm mt-1">{emailExistsError}</p>
           )}
         </div>
 
+        {/* University Select */}
         <div className="relative mt-4">
           <select
             id="university"
@@ -326,6 +323,7 @@ function Forms() {
           </label>
         </div>
 
+        {/* Password Input */}
         <div className="relative mt-4">
           <input
             type="password"
@@ -349,6 +347,7 @@ function Forms() {
           </label>
         </div>
 
+        {/* Confirm Password Input */}
         <div className="relative mt-4">
           <input
             type="password"
@@ -375,6 +374,34 @@ function Forms() {
           )}
         </div>
 
+        {/* Promo Code Input */}
+        <div className="relative mt-4">
+          <input
+            type="text"
+            id="promoCode"
+            className="block w-[290px] md:w-[400px] md:h-[40px] h-[32px] rounded-md border border-gray-300 py-1.5 px-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+            value={formData.promoCode}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder="Promo Code (Optional)"
+          />
+          <label
+            htmlFor="promoCode"
+            className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none transition-opacity duration-300 ${
+              formData.promoCode ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            <div className='flex'>
+              <img src={check} className='pr-2' alt="Promo Icon" /> Promo Code
+            </div>
+          </label>
+          {promoError && (
+            <p className="text-red-500 text-sm mt-1">{promoError}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isButtonDisabled}
@@ -397,4 +424,4 @@ function Forms() {
   );
 }
 
-export default Forms;
+export default Forms2;

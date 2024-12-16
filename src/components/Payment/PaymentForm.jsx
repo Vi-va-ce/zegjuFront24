@@ -30,7 +30,7 @@ const PaymentForm = () => {
     formData.append('photo', photo);
   
     try {
-      const response = await axios.post('v1/student/uploadPicture', formData, {
+      const response = await axios.get('v1/student/uploadPicture', formData, {
         headers: {},
       });
   

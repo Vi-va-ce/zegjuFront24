@@ -2,7 +2,7 @@ import React from 'react';
 import { di } from '../../../../assets';
 import { Link } from 'react-router-dom';
 
-function Basic({ BasicButtonStatus, onClickButton }) {
+function Basic({ BasicButtonStatus,BasicpriceStatus, onClickButton }) {
     const handleClick = () => {
         onClickButton('scroll');
     };
@@ -28,9 +28,9 @@ function Basic({ BasicButtonStatus, onClickButton }) {
 
             <div className='flex pl-4 md:pl-8 mt-6 md:mt-12'>
                 <p className='text-[#966ded] text-[16px] md:text-[24px] font-bold'>
-                219.00 ETB
+                {BasicpriceStatus + " ETB" || "219.00 ETB"}
                 </p>
-                <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-2'> /  4 Months </p>
+                <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-2'> /  1 semester </p>
             </div>
 
             <div className='flex justify-center items-center pt-1 md:pt-6'>

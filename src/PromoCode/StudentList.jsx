@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { refresh } from '../../assets'; // Ensure this path is correct
+import { refresh } from '../assets'; // Ensure this path is correct
 
-const HuPromo = () => {
+const StudentList = () => {
   // Mock data to display before fetching
   const mockData = [
     {
       campus: "Addis Ababa University",
       name: null,
       packageName: "FRESHMAN PREMIUM",
-      pg: "99",
+      pg: "15", // Percent given
       phone: "251953134956",
-      price: 3,
+      price: 100,
       promoCode: "1",
-      status: "SUCCESS",
     },
   ];
 
@@ -22,7 +21,8 @@ const HuPromo = () => {
 
   const fetchMembers = async () => {
     try {
-      const response = await axios.get('https://zegeju-1453f.uc.r.appspot.com/api/v9/student/getSuccessDataFiltered');
+      const response = await axios.get('admin/getPromoterUsers');
+      console.log(response)
       setMembers(response.data.successList); // Replace mock data with fetched data
     } catch (error) {
       console.error('Error fetching members:', error);
@@ -38,9 +38,13 @@ const HuPromo = () => {
   // Calculate total fees
   const totalFee = members.reduce((acc, member) => {
     const price = parseFloat(member.price || 0); // Handle potential null or undefined price
-    const fee = price * 0.15; // Calculate 15% fee
+    const pg = parseFloat(member.pg || 0); // Get percent given (pg) as a number
+    const fee = (price * pg) / 100; // Calculate dynamic fee based on pg
     return acc + fee;
   }, 0).toFixed(2);
+
+  // Extract a promo code to display next to the Freshman Promoter Page
+  const promoCode = members.length > 0 ? members[0].promoCode || "N/A" : "N/A";
 
   return (
     <div className="min-h-screen p-4 relative">
@@ -49,9 +53,12 @@ const HuPromo = () => {
       </div>
 
       <div className="flex justify-between items-center mb-2">
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap items-center space-x-4">
           <div className="md:text-xl text-md font-bold">Freshman</div>
           <div className="md:text-xl text-md font-bold">Promoter Page</div>
+          <div className="md:text-xl text-md font-bold text-gray-600">
+            (Promo Code: {promoCode})
+          </div>
         </div>
         <button 
           onClick={() => window.location.reload()} 
@@ -65,46 +72,43 @@ const HuPromo = () => {
         <table className="min-w-full border-collapse border border-gray-200">
           <thead>
             <tr className="bg-[rgba(244,244,244,1)]">
-              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Campus</th>
               <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Name</th>
+              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Campus</th>
               <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Package Name</th>
-              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Page</th>
               <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Phone Number</th>
               <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Price</th>
-              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Promo Code</th>
-              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Status</th>
-              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Fee (15%)</th>
+              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Percent Given</th>
+              <th className="border border-gray-200 px-2 py-1 text-sm md:text-base">Fee</th>
             </tr>
           </thead>
           <tbody className="bg-[#ecf7f8]">
             {loading ? (
               <tr>
-                <td colSpan="9" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-center">
+                <td colSpan="7" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-center">
                   Loading members...
                 </td>
               </tr>
             ) : members.length > 0 ? (
               members.map((member, index) => {
                 const price = parseFloat(member.price || 0); // Handle potential null or undefined price
-                const fee = (price * 0.15).toFixed(2); // Calculate 15% fee
+                const pg = parseFloat(member.pg || 0); // Get percent given (pg) as a number
+                const fee = ((price * pg) / 100).toFixed(2); // Calculate dynamic fee
 
                 return (
                   <tr key={index}>
-                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.campus || "N/A"}</td>
                     <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.name || "N/A"}</td>
+                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.campus || "N/A"}</td>
                     <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.packageName}</td>
-                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.pg || "N/A"}</td>
                     <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.phone}</td>
                     <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.price}</td>
-                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.promoCode || "N/A"}</td>
-                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.status}</td>
+                    <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{member.pg || "N/A"}</td>
                     <td className="border border-gray-200 px-2 py-1 text-sm md:text-base">{fee}</td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan="9" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-center">
+                <td colSpan="7" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-center">
                   No members found.
                 </td>
               </tr>
@@ -113,7 +117,7 @@ const HuPromo = () => {
           {members.length > 0 && (
             <tfoot>
               <tr className="bg-gray-200">
-                <td colSpan="8" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-right font-bold">Total Fees:</td>
+                <td colSpan="6" className="border border-gray-200 px-2 py-1 text-sm md:text-base text-right font-bold">Total Fees:</td>
                 <td className="border border-gray-200 px-2 py-1 text-sm md:text-base font-bold">{totalFee}</td>
               </tr>
             </tfoot>
@@ -124,4 +128,4 @@ const HuPromo = () => {
   );
 };
 
-export default HuPromo;
+export default StudentList;

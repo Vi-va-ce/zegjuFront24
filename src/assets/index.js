@@ -173,9 +173,22 @@ import tgar from './tgar.svg'
 import refresh from './refresh.svg'
 import cbebirr from './cbebirr.png'
 import scs from './scs.svg'
+import cbee from './cbee.svg'
+import awash from './awash.svg'
+import abis from './abis.png'
+import tele from './tele.svg'
+import dashn from './dashn.svg'
+import uploadd from './uploadd.svg'
+import arrow from './arrow.svg'
 export {
   scs,
- 
+  arrow,
+  uploadd,
+  dashn,
+  tele,
+  cbee,
+  awash,
+  abis,
   cbebirr,
   tgar,
   refresh,
