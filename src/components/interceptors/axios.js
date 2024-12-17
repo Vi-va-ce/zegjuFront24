@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { access_token } from "../FetchAccessToken";
 
 axios.defaults.baseURL = 'https://zegeju-1453f.uc.r.appspot.com/api/';
-// https://zegeju-1453f.uc.r.appspot.com/api/
+
 axios.interceptors.response.use(
   (resp) => resp,
   async (error) => {
