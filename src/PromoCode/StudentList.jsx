@@ -3,27 +3,14 @@ import axios from 'axios';
 import { refresh } from '../assets'; // Ensure this path is correct
 
 const StudentList = () => {
-  // Mock data to display before fetching
-  const mockData = [
-    {
-      campus: "Addis Ababa University",
-      name: null,
-      packageName: "FRESHMAN PREMIUM",
-      pg: "15", // Percent given
-      phone: "251953134956",
-      price: 100,
-      promoCode: "1",
-    },
-  ];
-
-  const [members, setMembers] = useState(mockData); // Initialize with mock data
+  const [members, setMembers] = useState([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
 
   const fetchMembers = async () => {
     try {
-      const response = await axios.get('admin/getPromoterUsers');
-      console.log(response)
-      setMembers(response.data.successList); // Replace mock data with fetched data
+      const response = await axios.post('admin/getPromoterUsers');
+      console.log(response);
+      setMembers(response.data.successList); // Set fetched data
     } catch (error) {
       console.error('Error fetching members:', error);
     } finally {
@@ -37,13 +24,12 @@ const StudentList = () => {
 
   // Calculate total fees
   const totalFee = members.reduce((acc, member) => {
-    const price = parseFloat(member.price || 0); // Handle potential null or undefined price
-    const pg = parseFloat(member.pg || 0); // Get percent given (pg) as a number
-    const fee = (price * pg) / 100; // Calculate dynamic fee based on pg
+    const price = parseFloat(member.price || 0);
+    const pg = parseFloat(member.pg || 0);
+    const fee = (price * pg) / 100;
     return acc + fee;
   }, 0).toFixed(2);
 
-  // Extract a promo code to display next to the Freshman Promoter Page
   const promoCode = members.length > 0 ? members[0].promoCode || "N/A" : "N/A";
 
   return (
@@ -90,9 +76,9 @@ const StudentList = () => {
               </tr>
             ) : members.length > 0 ? (
               members.map((member, index) => {
-                const price = parseFloat(member.price || 0); // Handle potential null or undefined price
-                const pg = parseFloat(member.pg || 0); // Get percent given (pg) as a number
-                const fee = ((price * pg) / 100).toFixed(2); // Calculate dynamic fee
+                const price = parseFloat(member.price || 0);
+                const pg = parseFloat(member.pg || 0);
+                const fee = ((price * pg) / 100).toFixed(2);
 
                 return (
                   <tr key={index}>

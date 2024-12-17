@@ -31,7 +31,7 @@ const PromoLogin = () => {
         email,
         password,
       });
-      console.log(response.data)
+      
       if (response.data.status === "Log in success!") {
         Cookies.set('refresh_token', response.data.refresh_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
