@@ -16,7 +16,7 @@ function Basic({ BasicButtonStatus, BasicpriceStatus, onClickButton }) {
     // Display button status with number if user is not logged in
     const displayButtonStatus = isUserLoggedIn 
         ? BasicButtonStatus || 'Enroll' 
-        : `${BasicButtonStatus || 'Enroll'} (0)`; // Replace '0' with the desired number
+        : `${BasicButtonStatus || 'Enroll'}`; // Replace '0' with the desired number
 
     return (
         <div className='bg-[#eadfff] w-[166px] md:w-[264px] h-[250px] md:h-[398px] rounded-md'>
