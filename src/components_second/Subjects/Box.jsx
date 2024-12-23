@@ -38,7 +38,7 @@ function Box({ Subject_name, textClass, onNoteButtonClick, onPracticeButtonClick
         </Link>
       </div>
       <div id='nextbuttons' className={`${hasSpaceBetween ? 'mt-[8px]' : 'mt-[44px]'} pl-[14px]`}>
-        <Link to='/NotesPro'>
+        <Link to='/NotesPrem'>
           <button
             className='border-solid border-2 bg-gradient-to-r from-[#966DED] to-[#C23FCD] rounded-md w-[193px] h-[38px] ml-2.5'
             onClick={handleNoteButtonClick}

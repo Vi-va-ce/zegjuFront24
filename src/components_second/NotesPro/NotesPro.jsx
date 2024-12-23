@@ -71,12 +71,13 @@ function NotesPro({ subjectName, message }) {
         <Sidenote2 chapters={chapters} onChapterSelect={handleChapterSelect} />
       </div>
       <div className=''>
-        <MainNote
-          subjectName={subjectName}
-          subchapterNote={subchapterNote}
-          selectedChapterIndex={selectedChapterIndex}
-          selectedSubchapterIndex={selectedSubchapterIndex}
-        />
+      <MainNote
+  subjectName={subjectName}
+  subchapterNote={subchapterNote}
+  selectedChapterIndex={selectedChapterIndex}
+  selectedSubchapterIndex={selectedSubchapterIndex}
+/>
+
       </div>
     </div>
   );
