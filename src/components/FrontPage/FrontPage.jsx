@@ -8,6 +8,7 @@ import NormalFooter from './NormalFooter';
 import Foooter from './Foooter';
 import Loader from '../../Loader';
 import Peertopeer from './Peertopeer';
+import { Practice } from '../../assets';
 
 function FrontPage() {
   const [scrollMessageReceived, setScrollMessageReceived] = useState(false);
@@ -27,8 +28,6 @@ function FrontPage() {
   const handleScrollMessage = () => {
     setScrollMessageReceived(true);
   };
-
- 
 
   return (
     <div className='bg-[#ecf7f8]'>

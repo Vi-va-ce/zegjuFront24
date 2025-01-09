@@ -27,6 +27,7 @@ function Exams() {
   const [BasicpriceStatus, setBasicpriceStatus] = useState('');
   const [PremiumpriceStatus, setPremiumpriceStatus] = useState('');
   const [Propricetatus, setPropriceStatus] = useState('');
+  const [GatpriceStatus, setGatpriceStatus] = useState('');
 
   useEffect(() => {
     const hasRefreshToken = document.cookie.includes('refresh_token');
@@ -56,6 +57,7 @@ function Exams() {
             setBasicpriceStatus(data.freshCourseData.basicPrice)
             setPremiumpriceStatus(data.freshCourseData.premiumPrice)
             setPropriceStatus(data.freshCourseData.proPrice)
+            setGatpriceStatus(data.gatData.gatPrice);
             
             
 
@@ -155,7 +157,7 @@ function Exams() {
       <div className='pt-4 md:pt-12 md:flex justify-center items-center'>
         <div className='flex justify-center items-center space-x-4 md:space-x-12'>
           <div className=''><UAT UatButtonStatus={UatButtonStatus} onClickButton={UatButtonStatus === 'Continue Preparing' ? handleScrollMessage6 : () => handleEnroll(UatButtonStatus, 'UAT')}  /></div>
-          <div className=''><GAT GatButtonStatus={GatButtonStatus} onClickButton={GatButtonStatus === 'Continue Preparing' ? handleScrollMessage5 : () => handleEnroll(GatButtonStatus, 'GAT')} /></div>
+          <div className=''><GAT GatButtonStatus={GatButtonStatus}  GatpriceStatus={GatpriceStatus}  onClickButton={GatButtonStatus === 'Continue Preparing' ? handleScrollMessage5 : () => handleEnroll(GatButtonStatus, 'GAT')} /></div>
           <div className='hidden md:block'><Eaa EaaButtonStatus={EaaButtonStatus} onClickButton={EaaButtonStatus === 'Continue Preparing' ? handleScrollMessage4 : () => handleEnroll(EaaButtonStatus, 'Eaa')} /></div>
         </div>
         <div className='flex justify-center items-center pt-8 space-x-4'>

@@ -2,10 +2,21 @@ import React from 'react'
 import { cape } from '../../../assets'
 import { Link } from 'react-router-dom';
 
-function GAT({onClickButton , GatButtonStatus}) {
+function GAT({onClickButton , GatButtonStatus, Gatpricetatus}) {
     const handleClick = () => {
         onClickButton('scroll');
       };
+
+      const isUserLoggedIn = Boolean(localStorage.getItem('refresh_token'));
+
+    // Display price status, defaulting to "219.00 ETB" if empty
+    const displayPriceStatus = Gatpricetatus || "190.00";
+
+    // Display button status with number if user is not logged in
+    const displayButtonStatus = isUserLoggedIn 
+        ? GatButtonStatus || 'Enroll' 
+        : `${GatButtonStatus || 'Enroll'}`; // Replace '0' with the desired number
+
   return (
     <div className=' bg-[rgba(226,185,235,1)] w-[166px] md:w-[264px] h-[176px] md:h-[280px] rounded-md'>
         <div className='flex items-center justify-between'>
@@ -29,7 +40,7 @@ function GAT({onClickButton , GatButtonStatus}) {
                 <div className='pt-6'>
                     <div className='flex pl-4 md:pl-6 mt-1 md:mt-4'>
                         <p className='text-[#966ded] text-[13px] md:text-[20px] font-bold'>
-                            449.99 ETB
+                        {displayPriceStatus} ETB
                         </p>
                         <p className='text-[#966ded] text-[10px] md:text-[16px] font-medium pt-1'> / 2 Months </p>
                     </div>
@@ -41,7 +52,7 @@ function GAT({onClickButton , GatButtonStatus}) {
                     <div className='space-x-2 md:space-x-5'>
                         <button onClick={handleClick} className={`w-[${GatButtonStatus === 'Continue Preparing' ? '160px' : '60px'}] md:w-[${GatButtonStatus === 'Continue Preparing' ? '170px' : '64px'}] h-[28px] md:h-[30px] border-solid border-2 border-fuchsia-500 rounded-md hover:bg-fuchsia-600 text-[#c23fcd] hover:text-white`}>
                             <p className='text-[16px]'>
-                                {GatButtonStatus || 'Enroll'}
+                            {displayButtonStatus}
                             </p>
                         </button>
 
