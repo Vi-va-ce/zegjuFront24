@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { access_token } from "../FetchAccessToken";
 
-axios.defaults.baseURL = 'https://zegeju-1453f.uc.r.appspot.com/api/';
+axios.defaults.baseURL = 'https://server.zegju.com/api/';
 
 axios.interceptors.response.use(
   (resp) => resp,
