@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { access_token } from "../FetchAccessToken";
 
-axios.defaults.baseURL = 'https://zegeju-1453f.uc.r.appspot.com/api/';
+axios.defaults.baseURL = 'https://server.zegju.com/api/';
 
 axios.interceptors.response.use(
   (resp) => resp,
@@ -11,7 +11,7 @@ axios.interceptors.response.use(
       const refresh_token = Cookies.get('refresh_token');
 
       if (refresh_token) {
-        const response= await axios.post('v4/student/refresh-token', { refresh_token });
+        const response = await axios.post('v4/student/refresh-token', { refresh_token });
 
         if (response.status === 200) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${response.data}`;
